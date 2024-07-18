@@ -10,6 +10,7 @@ setup(
     entry_points={
         'console_scripts': [
             'whisper-process=apps.app1.app:main',
+            'record-mic=libs.audio_recorder.audio_recorder:main',
         ],
     },
     author='Mat Silva',
