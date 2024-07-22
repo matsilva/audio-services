@@ -1,4 +1,4 @@
-from libs.whisper_processor.whisper_processor import WhisperProcessor
+from libs.transcript_processor.whisper_processor import WhisperProcessor
 
 def main():
     import argparse

@@ -1,12 +1,12 @@
 import unittest
 import tempfile
 import os
-from libs.audio_recorder.audio_recorder import SystemAudioRecorder
+from audio_recorder.audio_recorder import AppleSystemAudioRecorder
 
-class TestSystemAudioRecorder(unittest.TestCase):
+class TestAppleSystemAudioRecorder(unittest.TestCase):
     def setUp(self):
         self.temp_file = tempfile.NamedTemporaryFile(suffix=".m4a", delete=False).name
-        self.recorder = SystemAudioRecorder(output_file=self.temp_file)
+        self.recorder = AppleSystemAudioRecorder(output_file=self.temp_file)
 
     def tearDown(self):
         if os.path.exists(self.temp_file):

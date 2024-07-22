@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='my_project',
     version='0.1',
-    packages=find_packages(include=['libs.whisper_processor', 'apps']),
+    packages=find_packages(include=['libs.transcript_processor', 'apps']),
     install_requires=[
         'whisper @ git+https://github.com/openai/whisper.git',
     ],

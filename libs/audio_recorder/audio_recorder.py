@@ -1,9 +1,7 @@
 import pyaudio
 import wave
 import AVFoundation
-import Foundation
 import threading
-from os import system
 
 class AudioRecorder:
     def __init__(self, output_file="output-mic.wav", channels=2, rate=44100, chunk=1024):
@@ -74,9 +72,9 @@ class AudioRecorder:
 
 # //TODO: see if we can use this lib to combine microphone and system audio
 # abstract to m_chip lib and use this dynamically if the system is m1
-class SystemAudioRecorder:
+class AppleSystemAudioRecorder:
     def __init__(self, output_file="output-system.m4a"):
-        # todo: change this to a temp file path
+        # todo: change this to a temp file path as a default
         self.output_file = output_file
         self.setup()
 
@@ -91,9 +89,14 @@ class SystemAudioRecorder:
             AVFoundation.AVNumberOfChannelsKey: 2,
         }
 
-        self.recorder = AVFoundation.AVAudioRecorder.alloc().initWithURL_settings_error_(
-            Foundation.NSURL.fileURLWithPath_(self.output_file), self.settings, None
+        recorder, err = AVFoundation.AVAudioRecorder.alloc().initWithURL_settings_error_(
+            AVFoundation.NSURL.fileURLWithPath_(self.output_file), self.settings, None
         )
+        if err:
+            raise ValueError(err)
+
+        self.recorder = recorder
+        
 
     def start_recording(self):
         if self.recorder.prepareToRecord():
