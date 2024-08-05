@@ -34,7 +34,7 @@ class WhisperProcessor:
         result = whisper.decode(self.model, mel, options)
         return result.text
 
-    def process_audio(self, audio_path, recording_start_time):
+    def process_audio(self, audio_path, recording_start_time = datetime.now()):
         audio = self.load_and_prepare_audio(audio_path)
         mel = self.get_mel_spectrogram(audio)
         language = self.detect_language(mel)

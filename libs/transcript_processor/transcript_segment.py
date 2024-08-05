@@ -12,6 +12,13 @@ class TranscriptSegment:
     def get_end_time(self, format='%Y-%m-%d %H:%M:%S'):
         return self.end_time.strftime(format)
 
+    def to_dict(self):
+        return {
+            "start_time": self.get_start_time(),
+            "end_time": self.get_end_time(),
+            "text": self.text
+        }
+
     def __str__(self):
         return f"[{self.get_start_time()} - {self.get_end_time()}]: {self.text}"
 
