@@ -1,7 +1,7 @@
 import unittest
 import tempfile
 import os
-from audio_recorder.audio_recorder import AppleSystemAudioRecorder
+from audio_recorder.apple_audio_recorder_mic import AppleSystemAudioRecorder
 
 class TestAppleSystemAudioRecorder(unittest.TestCase):
     def setUp(self):

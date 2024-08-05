@@ -1,36 +1,44 @@
 import unittest
 import os
+from datetime import datetime, timedelta
 from transcript_processor.whisper_processor import WhisperProcessor
+from transcript_processor.transcript_segment import TranscriptSegment
 
 class TestWhisperProcessor(unittest.TestCase):
     def setUp(self):
         self.processor = WhisperProcessor(model_name="small")
-        test_dir = os.path.dirname(__file__)
-        self.test_audio_file = os.path.join(test_dir, "audiotest.m4a")
-        if not os.path.exists(self.test_audio_file):
-            self.fail(f"Test audio file '{self.test_audio_file}' does not exist. Please ensure the file is available.")
+        self.audio_path = "test_audio.wav"  # Path to a test audio file
+        self.recording_start_time = datetime(2024, 7, 22, 15, 30, 0)  # Example start time
 
-    def test_load_and_prepare_audio(self):
-        audio = self.processor.load_and_prepare_audio(self.test_audio_file)
-        self.assertIsNotNone(audio)
+    def test_transcript_segment(self):
+        start_time = datetime(2024, 7, 22, 15, 30, 0)
+        end_time = datetime(2024, 7, 22, 15, 30, 2)
+        text = "Hello, this is a test recording."
 
-    def test_get_mel_spectrogram(self):
-        audio = self.processor.load_and_prepare_audio(self.test_audio_file)
-        mel = self.processor.get_mel_spectrogram(audio)
-        self.assertIsNotNone(mel)
+        segment = TranscriptSegment(start_time, end_time, text)
+        self.assertEqual(segment.start_time, start_time)
+        self.assertEqual(segment.end_time, end_time)
+        self.assertEqual(segment.text, text)
+        self.assertEqual(segment.get_start_time(), "2024-07-22 15:30:00")
+        self.assertEqual(segment.get_end_time(), "2024-07-22 15:30:02")
+        self.assertEqual(str(segment), "[2024-07-22 15:30:00 - 2024-07-22 15:30:02]: Hello, this is a test recording.")
 
-    def test_detect_language(self):
-        audio = self.processor.load_and_prepare_audio(self.test_audio_file)
-        mel = self.processor.get_mel_spectrogram(audio)
-        language = self.processor.detect_language(mel)
-        self.assertIsInstance(language, str)
+    def test_process_audio(self):
+        # Assume that the Whisper model and the test audio file are correctly set up
+        language, segments = self.processor.process_audio(self.audio_path, self.recording_start_time)
 
-    def test_decode_audio(self):
-        audio = self.processor.load_and_prepare_audio(self.test_audio_file)
-        mel = self.processor.get_mel_spectrogram(audio)
-        text = self.processor.decode_audio(mel)
-        self.assertIsInstance(text, str)
-        self.assertEqual(text, "Alright, I am testing out the audio here and seeing how well it can transcribe all of this for me.")
+        # Check language detection
+        self.assertEqual(language, "en")  # Assuming the language is English
+
+        # Check transcript segments
+        self.assertIsInstance(segments, list)
+        self.assertGreater(len(segments), 0)
+
+        for segment in segments:
+            self.assertIsInstance(segment, TranscriptSegment)
+            self.assertIsInstance(segment.start_time, datetime)
+            self.assertIsInstance(segment.end_time, datetime)
+            self.assertIsInstance(segment.text, str)
 
 if __name__ == "__main__":
     unittest.main()
