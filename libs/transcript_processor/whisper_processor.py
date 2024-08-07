@@ -1,5 +1,7 @@
 import whisper
 import ssl
+from datetime import datetime, timedelta
+from .transcript_segment import TranscriptSegment
 
 class WhisperProcessor:
     def __init__(self, model_name="small"):
@@ -32,10 +34,31 @@ class WhisperProcessor:
         result = whisper.decode(self.model, mel, options)
         return result.text
 
-    def process_audio(self, audio_path):
+    def process_audio(self, audio_path, recording_start_time = datetime.now()):
         audio = self.load_and_prepare_audio(audio_path)
         mel = self.get_mel_spectrogram(audio)
         language = self.detect_language(mel)
-        text = self.decode_audio(mel)
-        return language, text
+        
+        result = self.model.transcribe(audio_path)
+        segments = []
 
+        for segment in result['segments']:
+            start_time = recording_start_time + timedelta(seconds=segment['start'])
+            end_time = recording_start_time + timedelta(seconds=segment['end'])
+            text = segment['text']
+            transcript_segment = TranscriptSegment(start_time, end_time, text)
+            segments.append(transcript_segment)
+
+        return language, segments
+
+# Example usage
+if __name__ == "__main__":
+    audio_path = "path/to/your/audio/file.wav"
+    recording_start_time = datetime.now()  # Replace with actual recording start time if available
+
+    processor = WhisperProcessor(model_name="small")
+    language, segments = processor.process_audio(audio_path, recording_start_time)
+
+    print(f"Detected language: {language}")
+    for segment in segments:
+        print(segment)

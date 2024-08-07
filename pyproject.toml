@@ -7,6 +7,10 @@ license = "UNLICENSED"
 readme = "README.md"
 package-mode = false
 
+packages = [
+    { include = "apps" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.12.4"
 pyaudio = "^0.2.14"
@@ -23,3 +27,6 @@ pytest-watch = "^4.2.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+transcribe = "apps.app1.app:main"
