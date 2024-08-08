@@ -3,8 +3,11 @@ import wave
 import AVFoundation
 import threading
 
+
 class AudioRecorder:
-    def __init__(self, output_file="output-mic.wav", channels=2, rate=44100, chunk=1024):
+    def __init__(
+        self, output_file="output-mic.wav", channels=2, rate=44100, chunk=1024
+    ):
         # todo: change this to a temp file path
         self.output_file = output_file
         self.channels = channels
@@ -16,11 +19,13 @@ class AudioRecorder:
         self.recording = False
 
     def start_recording(self):
-        self.stream = self.audio_interface.open(format=pyaudio.paInt16,
-                                                channels=self.channels,
-                                                rate=self.rate,
-                                                input=True,
-                                                frames_per_buffer=self.chunk)
+        self.stream = self.audio_interface.open(
+            format=pyaudio.paInt16,
+            channels=self.channels,
+            rate=self.rate,
+            input=True,
+            frames_per_buffer=self.chunk,
+        )
         self.frames = []
         self.recording = True
         print("Recording...")
@@ -43,11 +48,11 @@ class AudioRecorder:
         self.save_audio()
 
     def save_audio(self):
-        wf = wave.open(self.output_file, 'wb')
+        wf = wave.open(self.output_file, "wb")
         wf.setnchannels(self.channels)
         wf.setsampwidth(self.audio_interface.get_sample_size(pyaudio.paInt16))
         wf.setframerate(self.rate)
-        wf.writeframes(b''.join(self.frames))
+        wf.writeframes(b"".join(self.frames))
         wf.close()
 
     def record_microphone(self):
@@ -69,7 +74,6 @@ class AudioRecorder:
             self.stop_recording()
 
 
-
 # //TODO: see if we can use this lib to combine microphone and system audio
 # abstract to m_chip lib and use this dynamically if the system is m1
 class AppleSystemAudioRecorder:
@@ -80,7 +84,9 @@ class AppleSystemAudioRecorder:
 
     def setup(self):
         self.session = AVFoundation.AVAudioSession.sharedInstance()
-        self.session.setCategory_error_(AVFoundation.AVAudioSessionCategoryRecord, None)
+        self.session.setCategory_error_(
+            AVFoundation.AVAudioSessionCategoryRecord, None
+        )
         self.session.setActive_error_(True, None)
 
         self.settings = {
@@ -89,14 +95,18 @@ class AppleSystemAudioRecorder:
             AVFoundation.AVNumberOfChannelsKey: 2,
         }
 
-        recorder, err = AVFoundation.AVAudioRecorder.alloc().initWithURL_settings_error_(
-            AVFoundation.NSURL.fileURLWithPath_(self.output_file), self.settings, None
+        (
+            recorder,
+            err,
+        ) = AVFoundation.AVAudioRecorder.alloc().initWithURL_settings_error_(
+            AVFoundation.NSURL.fileURLWithPath_(self.output_file),
+            self.settings,
+            None,
         )
         if err:
             raise ValueError(err)
 
         self.recorder = recorder
-        
 
     def start_recording(self):
         if self.recorder.prepareToRecord():
@@ -108,6 +118,7 @@ class AppleSystemAudioRecorder:
             self.recorder.stop()
             print("Recording stopped.")
 
+
 # if __name__ == "__main__":
 #     import argparse
 
@@ -118,7 +129,7 @@ class AppleSystemAudioRecorder:
 #     args = parser.parse_args()
 
 #     recorder = AudioRecorder(output_file=args.output)
-    
+
 #     if args.system:
 #         recorder.record_system_audio()
 #     else:
@@ -126,5 +137,5 @@ class AppleSystemAudioRecorder:
 # if __name__ == "__main__":
 #     recorder = AudioRecorder()
 #     recorder.record_microphone()
-    # To record system audio, make sure Soundflower or equivalent is installed and configured
-    # recorder.record_system_audio()
+# To record system audio, make sure Soundflower or equivalent is installed and configured
+# recorder.record_system_audio()

@@ -8,7 +8,9 @@ readme = "README.md"
 package-mode = false
 
 packages = [
-    { include = "apps" }
+    { include = "apps" },
+    { include = "libs" },
+    { include = "cmd" }
 ]
 
 [tool.poetry.dependencies]
@@ -30,4 +32,27 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-transcribe = "apps.app1.app:main"
+transcribe = "cmd.transcribe.transcribe:main"
+
+[tool.black]
+line-length = 79
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+)/
+'''
+
+[tool.flake8]
+max-line-length = 29
+extend-ignore = "E203, W503"

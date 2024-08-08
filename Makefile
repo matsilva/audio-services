@@ -75,7 +75,7 @@ build-transcribe: transcribe-spec ## Build the transcribe CLI as a standalone bi
 
 transcribe-spec: ## Create and build using a custom spec file
 	$(call info,Creating transcribe.spec file...)
-	poetry run pyinstaller --onefile --name=transcribe --hidden-import=libs --specpath . apps/app1/app.py
+	poetry run pyinstaller --onefile --name=transcribe --hidden-import=libs --specpath . cmd/transcribe/transcribe.py
 	$(call info,Modifying transcribe.spec file...)
 	@sed -i '' 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec
 	@sed -i '' 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec

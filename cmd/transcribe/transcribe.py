@@ -5,7 +5,7 @@ from libs.transcript_processor.whisper_processor import WhisperProcessor
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Process audio with Whisper.")
+    parser = argparse.ArgumentParser(description="trancribe audio files")
     parser.add_argument(
         "-i",
         "--input",
