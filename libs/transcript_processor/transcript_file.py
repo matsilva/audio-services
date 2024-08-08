@@ -5,9 +5,9 @@ class TranscriptFile:
     def __init__(self, filePathWithName=str):
         self.filePath = filePathWithName
 
-    def write_segments_to_json(self, segments: list):
+    def write_segments_to_json(self, segments: list):  # noqa: E501
         """
-        Write the list of transcript segments to a JSON file at the specified file path.
+        Write the list of transcript segments to a JSON file at the specified file path. # noqa: E501
 
         Parameters
         ----------

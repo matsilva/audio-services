@@ -1,6 +1,6 @@
 import unittest
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from transcript_processor.whisper_processor import WhisperProcessor
 from transcript_processor.transcript_segment import TranscriptSegment
 
@@ -27,11 +27,11 @@ class TestWhisperProcessor(unittest.TestCase):
         self.assertEqual(segment.get_end_time(), "2024-07-22 15:30:02")
         self.assertEqual(
             str(segment),
-            "[2024-07-22 15:30:00 - 2024-07-22 15:30:02]: Hello, this is a test recording.",
+            "[2024-07-22 15:30:00 - 2024-07-22 15:30:02]: Hello, this is a test recording.",  # noqa: E501
         )
 
     def test_process_audio(self):
-        # Assume that the Whisper model and the test audio file are correctly set up
+        # Assume that the Whisper model and the test audio file are correctly set up # noqa: E501
         language, segments = self.processor.process_audio(
             self.audio_path, self.recording_start_time
         )

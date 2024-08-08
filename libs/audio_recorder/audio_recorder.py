@@ -64,7 +64,8 @@ class AudioRecorder:
             self.stop_recording()
 
     def record_system_audio(self):
-        # This method requires Soundflower or similar software to reroute system audio
+        # This method requires Soundflower
+        # or similar software to reroute system audio
         print("Starting system audio recording...")
         self.start_recording()
         try:
@@ -117,25 +118,3 @@ class AppleSystemAudioRecorder:
         if self.recorder.isRecording():
             self.recorder.stop()
             print("Recording stopped.")
-
-
-# if __name__ == "__main__":
-#     import argparse
-
-#     parser = argparse.ArgumentParser(description="Record audio from microphone or system.")
-#     parser.add_argument('--output', type=str, default="output-mic.wav", help="Output file name")
-#     parser.add_argument('--system', action='store_true', help="Record system audio instead of microphone")
-
-#     args = parser.parse_args()
-
-#     recorder = AudioRecorder(output_file=args.output)
-
-#     if args.system:
-#         recorder.record_system_audio()
-#     else:
-#         recorder.record_microphone()
-# if __name__ == "__main__":
-#     recorder = AudioRecorder()
-#     recorder.record_microphone()
-# To record system audio, make sure Soundflower or equivalent is installed and configured
-# recorder.record_system_audio()

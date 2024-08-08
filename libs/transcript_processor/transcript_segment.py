@@ -43,5 +43,7 @@ if __name__ == "__main__":
 
     # Print segment in custom format
     print(
-        f"[{segment.get_start_time('%H:%M:%S')} - {segment.get_end_time('%H:%M:%S')}]: {segment.text}"
+        f"[{segment.get_start_time('%H:%M:%S')} - "
+        f"{segment.get_end_time('%H:%M:%S')}]: "
+        f"{segment.text}"
     )
