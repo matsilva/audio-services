@@ -1,6 +1,6 @@
 # Makefile for managing project tasks
 
-.PHONY: help install fix-lock activate test coverage lint format watch build-transcribe transcribe-spec
+.PHONY: help install fix-lock activate test test-transcribe coverage lint format watch build-transcribe transcribe-spec
 
 # Define reusable logging functions
 INFO_COLOR=\033[1;34m
@@ -36,6 +36,11 @@ activate: ## Activate Poetry's virtual environment
 test: ## Run all tests with pytest
 	$(call info,Running tests with pytest...)
 	poetry run pytest
+	$(call success,Tests completed.)
+
+test-transcribe: ## Run all tests with pytest
+	$(call info,Running tests with pytest...)
+	poetry run pytest libs/transcript_processor
 	$(call success,Tests completed.)
 
 test-file: ## Run tests in a specific file
