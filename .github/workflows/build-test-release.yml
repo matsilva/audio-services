@@ -15,27 +15,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12.4'
-      - name: Install dependencies
+
+      # Build the Docker image and create the artifact
+      - name: Build Docker Image
         run: |
-          pip install poetry
-          make install
-      - name: Lint with flake8
+          make build-docker-transcribe
+
+      - name: Run Docker Container to Build Artifact
         run: |
-          # stop the build if there are Python syntax errors or undefined names
-          make lint
-      - name: Test with pytest
-        run: |
-          make test
-      - name: Build transcribe CLI
-        run: |
-          make build-transcribe
+          docker run --rm -v ${{ github.workspace }}/dist:/usr/src/app/dist audio-services
+
       - name: Archive transcribe binary
         run: |
           tar -czvf transcribe.tar.gz dist/transcribe
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -52,10 +45,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: transcribe
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ env.python-version }}
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1

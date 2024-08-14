@@ -1,6 +1,6 @@
 # Makefile for managing project tasks
 
-.PHONY: help install fix-lock activate test test-transcribe coverage lint format watch build-transcribe transcribe-spec
+.PHONY: help install fix-lock activate test test-transcribe coverage lint format watch build-docker-transcribe build-transcribe transcribe-spec
 
 # Define reusable logging functions
 INFO_COLOR=\033[1;34m
@@ -20,7 +20,7 @@ help: ## Display this help message
 
 install: ## Install project dependencies using Poetry
 	$(call info,Installing project dependencies using Poetry...)
-	poetry install
+	poetry install --with transcribe
 	$(call success,Project dependencies installed.)
 
 fix-lock: ## Fix poetry lockfile
@@ -73,10 +73,18 @@ watch: ## Automatically re-run tests when files change with pytest-watch
 	poetry run ptw
 	$(call success,Pytest-watch running.)
 
+build-docker-transcribe:
+	docker build -f cmd/transcribe/Dockerfile -t audio-services .
+
 build-transcribe: transcribe-spec ## Build the transcribe CLI as a standalone binary
 	$(call info,Building transcribe CLI as a standalone binary...)
 	poetry run pyinstaller transcribe.spec
 	$(call success,Transcribe CLI built successfully.)
+
+archive-transcribe-artifacts: FORCE
+	$(call info,Archiving transcribe CLI artifacts)
+	tar -czvf transcribe.tar.gz dist/transcribe
+	$(call success,Transcribe CLI artifacts archived successfully)
 
 transcribe-spec: ## Create and build using a custom spec file
 	$(call info,Creating transcribe.spec file...)
@@ -86,3 +94,5 @@ transcribe-spec: ## Create and build using a custom spec file
 	@sed -i '' 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec
 	@sed -i '' 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec
 	$(call success,transcribe.spec file saved successfully.)
+
+FORCE:
