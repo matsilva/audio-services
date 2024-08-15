@@ -14,7 +14,7 @@ COPY . .
 
 # RUN poetry install --with transcribe --sync
 
-RUN poetry bundle venv --only=transcribe /venv
+RUN poetry bundle venv --with=transcribe /venv
 
 # Use ENTRYPOINT to pass arguments to the script
 ENTRYPOINT ["make"]

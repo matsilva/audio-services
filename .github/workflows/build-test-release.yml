@@ -23,7 +23,7 @@ jobs:
 
       - name: Run Docker Container to Build Artifact
         run: |
-          docker run --rm -v ${{ github.workspace }}/dist:/usr/src/app/dist audio-services
+          docker run --rm -v ${{ github.workspace }}/dist:/usr/src/app/dist audio-services build-transcribe
 
       - name: Archive transcribe binary
         run: |
