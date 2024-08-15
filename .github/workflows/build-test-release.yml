@@ -2,9 +2,9 @@ name: audio-services workflow
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
 
       - name: Archive transcribe binary
         run: |
-          tar -czvf transcribe.tar.gz dist/transcribe
+          make archive-transcribe-artifacts
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2

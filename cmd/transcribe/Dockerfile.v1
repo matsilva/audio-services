@@ -1,0 +1,89 @@
+# Start base image
+
+FROM python:3.12.4 as base
+
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONHASHSEED=random \
+    PYTHONUNBUFFERED=1
+
+
+WORKDIR /app
+
+FROM base as builder
+
+ARG POETRY_VERSION=1.8.3
+
+RUN apt-get update && \
+    apt-get install pipx tini --no-install-recommends -y
+
+ENV PIP_DEFAULT_TIMEOUT=100 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    POETRY_VERSION=${POETRY_VERSION}}
+
+RUN pip install "poetry==$POETRY_VERSION"
+RUN python -m venv $VENV_PATH
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry export -f requirements.txt | /venv/bin/pip install -r /dev/stdin
+
+COPY . .
+RUN poetry build && /venv/bin/pip install dist/*.whl
+
+# # Lint the project using flake8
+# RUN make lint
+
+# # Run tests using pytest
+# RUN make test
+
+# # Build the transcribe CLI
+# RUN make build-transcribe
+
+# # Archive the transcribe binary
+# RUN tar -czvf transcribe.tar.gz dist/transcribe
+
+# Use ENTRYPOINT to pass arguments to the script
+ENTRYPOINT ["make"]
+
+CMD [ "help" ]
+
+# Example usage:
+# $ docker run -it --rm audio-services --arg1 value1 --arg2 value2
+
+# # Use an official Python runtime as a parent image
+# FROM python:3.12.4 as builder
+
+# # Set the working directory in the container
+# WORKDIR /usr/src/app
+
+# # Install system dependencies (if any)
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     build-essential \
+#     && rm -rf /var/lib/apt/lists/*
+
+# # Copy the project files into the container
+# COPY . .
+
+# # Install Poetry for dependency management
+# RUN pip install poetry==1.8.3
+
+# # Install Python dependencies using Poetry
+# RUN poetry install --without dev --no-root
+
+# # Lint the project using flake8
+# RUN make lint
+
+# # Run tests using pytest
+# RUN make test
+
+# # Build the transcribe CLI
+# RUN make build-transcribe
+
+# # Archive the transcribe binary
+# RUN tar -czvf transcribe.tar.gz dist/transcribe
+
+# # Use ENTRYPOINT to pass arguments to the script
+# ENTRYPOINT ["poetry", "run", "python", "cmd/transcribe/transcribe.py"]
+
+# # Example usage:
+# # $ docker run -it --rm audio-services --arg1 value1 --arg2 value2
