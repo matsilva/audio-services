@@ -2,9 +2,9 @@ name: audio-services workflow
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 permissions:
   contents: write
@@ -19,11 +19,15 @@ jobs:
       # Build the Docker image and create the artifact
       - name: Build Docker Image
         run: |
-          make build-docker-transcribe
+          make build-docker-transcribe-image
+
+      - name: Run Docker Container to run unit tests
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/src audio-services test-transcribe
 
       - name: Run Docker Container to Build Artifact
         run: |
-          docker run --rm -v ${{ github.workspace }}/dist:/usr/src/app/dist audio-services build-transcribe
+          docker run --rm -v ${{ github.workspace }}:/src audio-services build-transcribe
 
       - name: Archive transcribe binary
         run: |
@@ -33,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: transcribe
-          path: transcribe.tar.gz
+          path: dist/transcribe.tar.gz
 
   release:
     runs-on: ubuntu-latest

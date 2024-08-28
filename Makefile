@@ -1,6 +1,6 @@
 # Makefile for managing project tasks
 
-.PHONY: help install activate test test-transcribe coverage lint format watch build-docker-transcribe build-transcribe transcribe-spec archive-transcribe-artifacts
+.PHONY: help install activate test test-transcribe coverage lint format watch build-transcribe transcribe-spec archive-transcribe-artifacts
 
 # Define reusable logging functions
 INFO_COLOR=\033[1;34m
@@ -31,7 +31,7 @@ activate: ## Activate the virtual environment
 # Clean the dist and build directories
 build-clean: ## Clean the dist and build folders
 	$(call info,Cleaning dist and build folders...)
-	rm -rf dist build
+	rm -rf dist build *.spec
 	$(call success,dist and build folders cleaned.)
 
 .PHONY: cache-clean
@@ -82,7 +82,8 @@ watch: ## Automatically re-run tests when files change with pytest-watch
 	ptw
 	$(call success,Pytest-watch running.)
 
-build-docker-transcribe: ## Build the transcribe Docker image
+.phony: build-docker-transcribe-image 
+build-docker-transcribe-image: ## Build the transcribe Docker image
 	$(call info,Building Docker image for transcribe CLI...)
 	docker build -f cmd/transcribe/Dockerfile -t audio-services .
 	$(call success,Transcribe Docker image built successfully.)
@@ -94,16 +95,17 @@ build-transcribe: transcribe-spec ## Build the transcribe CLI as a standalone bi
 
 archive-transcribe-artifacts: FORCE ## Archive transcribe CLI artifacts
 	$(call info,Archiving transcribe CLI artifacts...)
-	tar -czvf transcribe.tar.gz dist/transcribe
+	tar -czvf dist/transcribe.tar.gz dist/transcribe
 	$(call success,Transcribe CLI artifacts archived successfully.)
+
 
 transcribe-spec: ## Create and build using a custom spec file
 	$(call info,Creating transcribe.spec file...)
 	pyinstaller --onefile --name=transcribe --hidden-import=libs --specpath . cmd/transcribe/transcribe.py
 	$(call info,Modifying transcribe.spec file...)
-	@sed -i '' 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec
-	@sed -i '' 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec
-	@sed -i '' 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec
+	@sed -i.bak 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec
+	@sed -i.bak 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec
+	@sed -i.bak 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec
 	$(call success,transcribe.spec file saved successfully.)
 
 FORCE:
