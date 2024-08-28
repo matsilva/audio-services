@@ -24,16 +24,17 @@ class TranscriptFile:
                 json.dump(
                     segments_dict, json_file, ensure_ascii=False, indent=4
                 )
-            print(f"Successfully wrote segments to {self.filePath}")
+            return segments_dict
         except Exception as e:
             print(f"Failed to write segments to {self.filePath}: {e}")
+            raise e
 
 
 # Example usage
-if __name__ == "__main__":
-    transcript = TranscriptFile("transcript.json")
-    segments = [
-        {"start": 0.0, "end": 5.0, "text": "Hello, world!"},
-        {"start": 5.1, "end": 10.0, "text": "This is a test transcript."},
-    ]
-    transcript.write_segments_to_json(segments)
+# if __name__ == "__main__":
+#     transcript = TranscriptFile("transcript.json")
+#     segments = [
+#         {"start": 0.0, "end": 5.0, "text": "Hello, world!"},
+#         {"start": 5.1, "end": 10.0, "text": "This is a test transcript."},
+#     ]
+# transcript.write_segments_to_json(segments)
