@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     libportaudiocpp0 \
     portaudio19-dev \
     gcc \
+    ffmpeg \ 
     && apt-get clean
 
 ENV PATH="/root/.local/bin:${PATH}"
