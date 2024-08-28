@@ -27,6 +27,21 @@ activate: ## Activate the virtual environment
 	. venv/bin/activate
 	$(call success,Virtual environment activated.)
 
+.PHONY: build-clean
+# Clean the dist and build directories
+build-clean: ## Clean the dist and build folders
+	$(call info,Cleaning dist and build folders...)
+	rm -rf dist build
+	$(call success,dist and build folders cleaned.)
+
+.PHONY: cache-clean
+# Remove all __pycache__ and .pytest_cache folders
+cache-clean: build-clean ## Remove all __pycache__ and .pytest_cache folders
+	$(call info,Removing __pycache__ and .pytest_cache folders...)
+	find . -type d -name '__pycache__' -exec rm -rf {} + 
+	find . -type d -name '.pytest_cache' -exec rm -rf {} +
+	$(call success,__pycache__ and .pytest_cache folders removed.)
+
 test: ## Run all tests with pytest
 	$(call info,Running tests with pytest...)
 	pytest
