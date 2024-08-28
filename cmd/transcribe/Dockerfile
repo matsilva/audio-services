@@ -1,22 +1,26 @@
 FROM python:3.12.4 as Builder
 
-RUN apt-get update &&\
-    apt-get install --no-install-suggests --no-install-recommends --yes pipx
+# Update package list and install necessary system packages
+RUN apt-get update && apt-get install -y \
+    libportaudio2 \
+    libportaudiocpp0 \
+    portaudio19-dev \
+    gcc \
+    && apt-get clean
 
 ENV PATH="/root/.local/bin:${PATH}"
-
-RUN pipx install poetry==1.8.3
-RUN pipx inject poetry poetry-plugin-bundle
 
 WORKDIR /src
 
 COPY . .
 
-# RUN poetry install --with transcribe --sync
+# Exclude pyobjc from the requirements as it's macOS-specific
+RUN sed '/pyobjc/d' requirements.txt > requirements-no-mac.txt
 
-RUN poetry bundle venv --with=transcribe /venv
+# Install Python dependencies
+RUN pip install -r requirements-no-mac.txt
 
 # Use ENTRYPOINT to pass arguments to the script
 ENTRYPOINT ["make"]
 
-CMD [ "help" ]
+CMD ["help"]
