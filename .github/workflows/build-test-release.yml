@@ -19,19 +19,19 @@ jobs:
       # Build the Docker image and create the artifact
       - name: Build Docker Image
         run: |
-          make build-docker-transcribe-image
+          make build-transcribe-image
 
       - name: Run Docker Container to run unit tests
         run: |
-          docker run --rm -v ${{ github.workspace }}:/src audio-services test-transcribe
+          make test-transcribe-docker
 
       - name: Run Docker Container to Build Artifact
         run: |
-          docker run --rm -v ${{ github.workspace }}:/src audio-services build-transcribe
+          make build-transcribe-docker
 
       - name: Archive transcribe binary
         run: |
-          make archive-transcribe-artifacts
+          make archive-transcribe-artifacts-docker
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
