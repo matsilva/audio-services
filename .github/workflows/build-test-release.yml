@@ -11,4 +11,4 @@ permissions:
 
 jobs:
   transcribe-cli:
-    uses: ./.github/workflows/apps/transcribe.yml
+    uses: ./.github/workflows/transcribe.yml
