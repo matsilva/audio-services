@@ -1,32 +1,22 @@
-[tool.poetry]
-name = "audio-services"
-version = "0.1.0"
-description = "Various services, apis and clis to help with audio functionalities, like transcription, etc"
-authors = ["Mat Silva <matsilva@hey.com>"]
-license = "UNLICENSED"
-readme = "README.md"
-package-mode = false
+[tool.black]
+line-length = 120
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+)/
+'''
 
-packages = [
-    { include = "apps" }
-]
-
-[tool.poetry.dependencies]
-python = "^3.12.4"
-pyaudio = "^0.2.14"
-pyobjc = "^10.3.1"
-openai-whisper = {git = "https://github.com/openai/whisper.git"}
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.1"
-pytest-cov = "^5.0.0"
-flake8 = "^7.1.0"
-black = "^24.4.2"
-pytest-watch = "^4.2.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-transcribe = "apps.app1.app:main"
+[tool.flake8]
+max-line-length = 120
+extend-ignore = "E203, W503"

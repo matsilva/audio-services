@@ -1,41 +1,95 @@
 # Makefile for managing project tasks
 
-.PHONY: help install fix-lock activate test coverage lint format watch
 
+# Define reusable logging functions
+INFO_COLOR=\033[1;34m
+SUCCESS_COLOR=\033[1;32m
+NO_COLOR=\033[0m
+HELP_COLOR=\033[1;36m
+
+info = @echo "$(INFO_COLOR)[start] $(1)$(NO_COLOR)"
+success = @echo "$(SUCCESS_COLOR)[done] $(1)$(NO_COLOR)"
+
+.PHONY: help 
 help: ## Display this help message
-	@echo "Usage: make [target]"
+	@echo "$(HELP_COLOR)Usage: make [target]$(NO_COLOR)"
 	@echo ""
-	@echo "Targets:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-15s %s\n", $$1, $$2}'
+	@echo "$(HELP_COLOR)Targets:$(NO_COLOR)"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(HELP_COLOR)%-30s$(NO_COLOR) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(HELP_COLOR)Additional Targets:$(NO_COLOR)"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' cmd/*/*.mk | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(HELP_COLOR)%-30s$(NO_COLOR) %s\n", $$1, $$2}'
 
-install: ## Install project dependencies using Poetry
-	poetry install
 
-fix-lock: ## Fix poetry lockfile
-	poetry lock
+FORCE:
 
-activate: ## Activate Poetry's virtual environment
-	poetry shell
+.PHONY: install
+install: ## Install project dependencies using pipx
+	$(call info,Installing project dependencies using pipx...)
+	pip install -r requirements.txt
+	$(call success,Project dependencies installed.)
 
+.PHONY: activate
+activate: ## Activate the virtual environment
+	$(call info,Activating virtual environment...)
+	. venv/bin/activate
+	$(call success,Virtual environment activated.)
+
+.PHONY: build-clean
+# Clean the dist and build directories
+build-clean: ## Clean the dist and build folders
+	$(call info,Cleaning dist and build folders...)
+	rm -rf dist build *.spec
+	$(call success,dist and build folders cleaned.)
+
+.PHONY: cache-clean
+# Remove all __pycache__ and .pytest_cache folders
+cache-clean: build-clean ## Remove all __pycache__ and .pytest_cache folders
+	$(call info,Removing __pycache__ and .pytest_cache folders...)
+	find . -type d -name '__pycache__' -exec rm -rf {} + 
+	find . -type d -name '.pytest_cache' -exec rm -rf {} +
+	$(call success,__pycache__ and .pytest_cache folders removed.)
+
+.PHONY: test
 test: ## Run all tests with pytest
-	poetry run pytest
+	$(call info,Running tests with pytest...)
+	pytest
+	$(call success,Tests completed.)
 
+.PHONY: test-file
 test-file: ## Run tests in a specific file
-	@echo "Usage: make test-file FILE=tests/test_my_module.py"
-	@read -p "Enter the test file path: " FILE && poetry run pytest $$FILE
+	$(call info,Running tests in a specific file...)
+	@read -p "Enter the test file path: " FILE && pytest $$FILE
+	$(call success,Tests in specific file completed.)
 
+.PHONY: test-function
 test-function: ## Run a specific test function
-	@echo "Usage: make test-function FILE=tests/test_my_module.py FUNCTION=test_my_function"
-	@read -p "Enter the test file path: " FILE && read -p "Enter the test function name: " FUNCTION && poetry run pytest $$FILE::$$FUNCTION
+	$(call info,Running a specific test function...)
+	@read -p "Enter the test file path: " FILE && read -p "Enter the test function name: " FUNCTION && pytest $$FILE::$$FUNCTION
+	$(call success,Specific test function completed.)
 
+.PHONY: test-coverage
 coverage: ## Run tests with coverage
-	poetry run pytest --cov=audio-services
+	$(call info,Running tests with coverage...)
+	pytest --cov=audio-services
+	$(call success,Coverage tests completed.)
 
+.PHONY: lint
 lint: ## Check for linting errors with flake8
-	poetry run flake8 
+	$(call info,Checking for linting errors with flake8...)
+	flake8
+	$(call success,Linting check completed.)
 
+.PHONY: format
 format: ## Format the code with black
-	poetry run black 
+	$(call info,Formatting code with black...)
+	black .
+	$(call success,Code formatting completed.)
 
+.PHONY: watch
 watch: ## Automatically re-run tests when files change with pytest-watch
-	poetry run ptw
+	$(call info,Starting pytest-watch...)
+	ptw
+	$(call success,Pytest-watch running.)
+
+include cmd/transcribe/transcribe.mk

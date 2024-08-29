@@ -1,15 +1,18 @@
 import unittest
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from transcript_processor.whisper_processor import WhisperProcessor
 from transcript_processor.transcript_segment import TranscriptSegment
+
 
 class TestWhisperProcessor(unittest.TestCase):
     def setUp(self):
         self.processor = WhisperProcessor(model_name="small")
         test_dir = os.path.dirname(__file__)
         self.audio_path = os.path.join(test_dir, "audiotest.m4a")
-        self.recording_start_time = datetime(2024, 7, 22, 15, 30, 0)  # Example start time
+        self.recording_start_time = datetime(
+            2024, 7, 22, 15, 30, 0
+        )  # Example start time
 
     def test_transcript_segment(self):
         start_time = datetime(2024, 7, 22, 15, 30, 0)
@@ -22,11 +25,16 @@ class TestWhisperProcessor(unittest.TestCase):
         self.assertEqual(segment.text, text)
         self.assertEqual(segment.get_start_time(), "2024-07-22 15:30:00")
         self.assertEqual(segment.get_end_time(), "2024-07-22 15:30:02")
-        self.assertEqual(str(segment), "[2024-07-22 15:30:00 - 2024-07-22 15:30:02]: Hello, this is a test recording.")
+        self.assertEqual(
+            str(segment),
+            "[2024-07-22 15:30:00 - 2024-07-22 15:30:02]: Hello, this is a test recording.",  # noqa: E501
+        )
 
     def test_process_audio(self):
-        # Assume that the Whisper model and the test audio file are correctly set up
-        language, segments = self.processor.process_audio(self.audio_path, self.recording_start_time)
+        # Assume that the Whisper model and the test audio file are correctly set up # noqa: E501
+        language, segments = self.processor.process_audio(
+            self.audio_path, self.recording_start_time
+        )
 
         # Check language detection
         self.assertEqual(language, "en")  # Assuming the language is English
@@ -40,6 +48,7 @@ class TestWhisperProcessor(unittest.TestCase):
             self.assertIsInstance(segment.start_time, datetime)
             self.assertIsInstance(segment.end_time, datetime)
             self.assertIsInstance(segment.text, str)
+
 
 if __name__ == "__main__":
     unittest.main()

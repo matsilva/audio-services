@@ -2,7 +2,7 @@ For development, [see the development guide](./docs/devx.md).
 
 ### Local CLI example
 
-`poetry run transcribe -i path/to/audio.m4a -o path/to/transcription.json`
+`./dist/transcribe -i path/to/audio.m4a -o path/to/transcription.json`
 
 ### TODOS:
 
