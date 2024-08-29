@@ -1,0 +1,56 @@
+name: transcribe build,test and release
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  transcribe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build the Docker image and create the artifact
+      - name: Build Docker Image
+        run: |
+          make build-transcribe-image
+
+      - name: Run Docker Container to run unit tests
+        run: |
+          make test-transcribe-docker
+
+      - name: Run Docker Container to Build Artifact
+        if: contains(github.ref, 'main')
+        run: |
+          make build-transcribe-docker
+
+      - name: Archive transcribe binary
+        if: contains(github.ref, 'main')
+        run: |
+          make archive-transcribe-artifacts-docker
+
+      - name: Create GitHub Release
+        if: contains(github.ref, 'main')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        if: contains(github.ref, 'main')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/transcribe.tar.gz
+          asset_name: transcribe.tar.gz
+          asset_content_type: application/gzip
