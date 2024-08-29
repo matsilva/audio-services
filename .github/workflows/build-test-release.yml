@@ -12,3 +12,4 @@ permissions:
 jobs:
   transcribe-cli:
     uses: ./.github/workflows/transcribe.yml
+    secrets: inherit
