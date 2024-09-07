@@ -1,3 +1,5 @@
+[![audio-services workflow](https://github.com/matsilva/audio-services/actions/workflows/build-test-release.yml/badge.svg?branch=main)](https://github.com/matsilva/audio-services/actions/workflows/build-test-release.yml)
+
 # Getting started
 
 **Prerequisites: Install portaudio and ffmpeg**
