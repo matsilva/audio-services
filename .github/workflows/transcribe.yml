@@ -18,39 +18,16 @@ jobs:
         run: |
           make build-transcribe-image
 
-      - name: Run Docker Container to run unit tests
+      - name: Lint project
+        run: |
+          make lint-transcribe-docker
+
+      - name: Perform unit tests
         run: |
           make test-transcribe-docker
 
-      - name: Run Docker Container to Build Artifact
+      # Largely a smoke test at this point to ensure it compiles fine
+      - name: Build Binary CLI
         if: contains(github.ref, 'main')
         run: |
           make build-transcribe-docker
-
-      - name: Archive transcribe binary
-        if: contains(github.ref, 'main')
-        run: |
-          make archive-transcribe-artifacts-docker
-
-      - name: Create GitHub Release
-        if: contains(github.ref, 'main')
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        if: contains(github.ref, 'main')
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/transcribe.tar.gz
-          asset_name: transcribe.tar.gz
-          asset_content_type: application/gzip

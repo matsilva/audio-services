@@ -16,14 +16,9 @@ class TranscriptFile:
         """
         try:
             # Convert each segment to a dictionary
-            segments_dict = [
-                segment.to_dict() if hasattr(segment, "to_dict") else segment
-                for segment in segments
-            ]
+            segments_dict = [segment.to_dict() if hasattr(segment, "to_dict") else segment for segment in segments]
             with open(self.filePath, "w", encoding="utf-8") as json_file:
-                json.dump(
-                    segments_dict, json_file, ensure_ascii=False, indent=4
-                )
+                json.dump(segments_dict, json_file, ensure_ascii=False, indent=4)
             return segments_dict
         except Exception as e:
             print(f"Failed to write segments to {self.filePath}: {e}")

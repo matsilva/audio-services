@@ -1,5 +1,8 @@
-from libs.transcript_processor.transcript_file import TranscriptFile
-from libs.transcript_processor.whisper_processor import WhisperProcessor
+# from libs.transcript_processor.transcript_file import TranscriptFile
+# from libs.transcript_processor.whisper_processor import WhisperProcessor
+
+
+# TODO: Actually implement a simple rest api for transcription processing
 
 
 def main():
@@ -26,10 +29,8 @@ def main():
     parser.add_argument("-ll", "--log-level", required=False, help="Specifies the log level (e.g., INFO, WARNING)")
     args = parser.parse_args()
 
-    processor = WhisperProcessor(model_name="small")
-    _, segments = processor.process_audio(args.input)
-    writer = TranscriptFile(args.output)
-    writer.write_segments_to_json(segments)
+    print("Transcription server is not implemented")
+    print(args)
 
 
 if __name__ == "__main__":

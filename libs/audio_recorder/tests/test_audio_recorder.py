@@ -9,9 +9,7 @@ from audio_recorder.audio_recorder import AudioRecorder
 
 class TestAudioRecorder(unittest.TestCase):
     def setUp(self):
-        self.temp_file = tempfile.NamedTemporaryFile(
-            suffix=".m4a", delete=False
-        ).name
+        self.temp_file = tempfile.NamedTemporaryFile(suffix=".m4a", delete=False).name
         self.recorder = AudioRecorder(output_file=self.temp_file)
 
     def tearDown(self):
@@ -76,9 +74,7 @@ class TestAudioRecorder(unittest.TestCase):
         # Verify wave open was called with correct parameters
         mock_wave_open.assert_called_with(self.recorder.output_file, "wb")
         mock_wave.setnchannels.assert_called_with(self.recorder.channels)
-        mock_wave.setsampwidth.assert_called_with(
-            self.recorder.audio_interface.get_sample_size(pyaudio.paInt16)
-        )
+        mock_wave.setsampwidth.assert_called_with(self.recorder.audio_interface.get_sample_size(pyaudio.paInt16))
         mock_wave.setframerate.assert_called_with(self.recorder.rate)
         mock_wave.writeframes.assert_called_once()
         mock_wave.close.assert_called_once()

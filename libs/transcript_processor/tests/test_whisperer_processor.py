@@ -10,9 +10,7 @@ class TestWhisperProcessor(unittest.TestCase):
         self.processor = WhisperProcessor(model_name="small")
         test_dir = os.path.dirname(__file__)
         self.audio_path = os.path.join(test_dir, "audiotest.m4a")
-        self.recording_start_time = datetime(
-            2024, 7, 22, 15, 30, 0
-        )  # Example start time
+        self.recording_start_time = datetime(2024, 7, 22, 15, 30, 0)  # Example start time
 
     def test_transcript_segment(self):
         start_time = datetime(2024, 7, 22, 15, 30, 0)
@@ -32,9 +30,7 @@ class TestWhisperProcessor(unittest.TestCase):
 
     def test_process_audio(self):
         # Assume that the Whisper model and the test audio file are correctly set up # noqa: E501
-        language, segments = self.processor.process_audio(
-            self.audio_path, self.recording_start_time
-        )
+        language, segments = self.processor.process_audio(self.audio_path, self.recording_start_time)
 
         # Check language detection
         self.assertEqual(language, "en")  # Assuming the language is English

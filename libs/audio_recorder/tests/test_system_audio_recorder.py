@@ -6,9 +6,7 @@ from audio_recorder.audio_recorder import AppleSystemAudioRecorder
 
 class TestAppleSystemAudioRecorder(unittest.TestCase):
     def setUp(self):
-        self.temp_file = tempfile.NamedTemporaryFile(
-            suffix=".m4a", delete=False
-        ).name
+        self.temp_file = tempfile.NamedTemporaryFile(suffix=".m4a", delete=False).name
         self.recorder = AppleSystemAudioRecorder(output_file=self.temp_file)
 
     def tearDown(self):

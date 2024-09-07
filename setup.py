@@ -14,9 +14,7 @@ setup(
     install_requires=["pyinstaller>=6.9.0,<7.0.0"],
     extras_require={
         "record": ["pyaudio>=0.2.14,<0.3.0", "pyobjc>=10.3.1,<10.4.0"],
-        "transcribe": [
-            "openai-whisper @ git+https://github.com/openai/whisper.git"
-        ],
+        "transcribe": ["openai-whisper @ git+https://github.com/openai/whisper.git"],
         "dev": [
             "pytest>=8.3.1,<9.0.0",
             "pytest-cov>=5.0.0,<6.0.0",

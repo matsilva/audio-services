@@ -5,9 +5,7 @@ import threading
 
 
 class AudioRecorder:
-    def __init__(
-        self, output_file="output-mic.wav", channels=2, rate=44100, chunk=1024
-    ):
+    def __init__(self, output_file="output-mic.wav", channels=2, rate=44100, chunk=1024):
         # todo: change this to a temp file path
         self.output_file = output_file
         self.channels = channels
@@ -85,9 +83,7 @@ class AppleSystemAudioRecorder:
 
     def setup(self):
         self.session = AVFoundation.AVAudioSession.sharedInstance()
-        self.session.setCategory_error_(
-            AVFoundation.AVAudioSessionCategoryRecord, None
-        )
+        self.session.setCategory_error_(AVFoundation.AVAudioSessionCategoryRecord, None)
         self.session.setActive_error_(True, None)
 
         self.settings = {
