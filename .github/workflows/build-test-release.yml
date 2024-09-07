@@ -1,4 +1,4 @@
-name: audio-services workflow
+name: audio-services
 
 on:
   push:
