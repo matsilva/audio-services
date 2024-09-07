@@ -34,12 +34,17 @@ build-transcribe-docker: ## Runs build-transcribe within docker container
 .PHONY: transcribe-spec
 transcribe-spec: ## Create and build using a custom spec file
 	$(call info,Creating transcribe.spec file...)
-	pyinstaller --onefile --name=transcribe --hidden-import=libs --specpath . cmd/transcribe/transcribe.py
+	pyinstaller --osx-bundle-identifier dev.silvabyte.MacRecorder --onefile --name=transcribe --hidden-import=libs --specpath . cmd/transcribe/transcribe.py
 	$(call info,Modifying transcribe.spec file...)
 	@sed -i.bak 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec
 	@sed -i.bak 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec
 	@sed -i.bak 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec
 	$(call success,transcribe.spec file saved successfully.)
+
+
+.PHONY: lint-transcribe-docker
+lint-transcribe-docker: ## Runs lint within docker container
+	$(DOCKER_RUN) lint 
 
 .PHONY: archive-transcribe-artifacts
 archive-transcribe-artifacts: FORCE ## Archive transcribe CLI artifacts

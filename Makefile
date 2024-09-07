@@ -56,17 +56,6 @@ test: ## Run all tests with pytest
 	pytest
 	$(call success,Tests completed.)
 
-.PHONY: test-file
-test-file: ## Run tests in a specific file
-	$(call info,Running tests in a specific file...)
-	@read -p "Enter the test file path: " FILE && pytest $$FILE
-	$(call success,Tests in specific file completed.)
-
-.PHONY: test-function
-test-function: ## Run a specific test function
-	$(call info,Running a specific test function...)
-	@read -p "Enter the test file path: " FILE && read -p "Enter the test function name: " FUNCTION && pytest $$FILE::$$FUNCTION
-	$(call success,Specific test function completed.)
 
 .PHONY: test-coverage
 coverage: ## Run tests with coverage

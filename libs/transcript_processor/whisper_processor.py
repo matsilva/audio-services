@@ -44,9 +44,7 @@ class WhisperProcessor:
         segments = []
 
         for segment in result["segments"]:
-            start_time = recording_start_time + timedelta(
-                seconds=segment["start"]
-            )
+            start_time = recording_start_time + timedelta(seconds=segment["start"])
             end_time = recording_start_time + timedelta(seconds=segment["end"])
             text = segment["text"]
             transcript_segment = TranscriptSegment(start_time, end_time, text)
@@ -58,14 +56,10 @@ class WhisperProcessor:
 # Example usage
 if __name__ == "__main__":
     audio_path = "path/to/your/audio/file.wav"
-    recording_start_time = (
-        datetime.now()
-    )  # Replace with actual recording start time if available
+    recording_start_time = datetime.now()  # Replace with actual recording start time if available
 
     processor = WhisperProcessor(model_name="small")
-    language, segments = processor.process_audio(
-        audio_path, recording_start_time
-    )
+    language, segments = processor.process_audio(audio_path, recording_start_time)
 
     print(f"Detected language: {language}")
     for segment in segments:

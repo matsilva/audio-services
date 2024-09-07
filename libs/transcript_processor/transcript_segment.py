@@ -21,9 +21,7 @@ class TranscriptSegment:
         }
 
     def __str__(self):
-        return (
-            f"[{self.get_start_time()} - {self.get_end_time()}]: {self.text}"
-        )
+        return f"[{self.get_start_time()} - {self.get_end_time()}]: {self.text}"
 
 
 # Example usage
@@ -34,16 +32,10 @@ if __name__ == "__main__":
     segment_end = recording_start_time + timedelta(seconds=2)
 
     # Create a TranscriptSegment instance
-    segment = TranscriptSegment(
-        segment_start, segment_end, "Hello, this is a test recording."
-    )
+    segment = TranscriptSegment(segment_start, segment_end, "Hello, this is a test recording.")
 
     # Print segment in default format
     print(segment)
 
     # Print segment in custom format
-    print(
-        f"[{segment.get_start_time('%H:%M:%S')} - "
-        f"{segment.get_end_time('%H:%M:%S')}]: "
-        f"{segment.text}"
-    )
+    print(f"[{segment.get_start_time('%H:%M:%S')} - " f"{segment.get_end_time('%H:%M:%S')}]: " f"{segment.text}")
