@@ -25,7 +25,6 @@ run `make help` to see all commands
 
 `./dist/transcribe -i path/to/audio.m4a -o path/to/transcription.json`
 
-### TODOS:
+### Project Management
 
-- Support output to plain text (stripped of time stamps, etc, just text)
-- Support output to csv
+This repo is managed using [Github Projects](https://github.com/users/matsilva/projects/2) to track planned and unplanned work (features, bugs etc).
