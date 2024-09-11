@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class TranscriptFile:
@@ -15,6 +16,10 @@ class TranscriptFile:
             The list of transcript segments to write to the JSON file.
         """
         try:
+            # Ensure the directory for the file path exists
+            directory = os.path.dirname(self.filePath)
+            if directory and not os.path.exists(directory):
+                os.makedirs(directory)
             # Convert each segment to a dictionary
             segments_dict = [segment.to_dict() if hasattr(segment, "to_dict") else segment for segment in segments]
             with open(self.filePath, "w", encoding="utf-8") as json_file:
