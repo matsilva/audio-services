@@ -7,7 +7,7 @@ DOCKER_RUN = docker run --rm -v ./:/src $(DOCKER_IMAGE)
 .PHONY: test-transcribe
 test-transcribe: ## Run all transcribe-related tests with pytest
 	$(call info,Running transcribe tests with pytest...)
-	$(VENV_PATH)/pytest libs/transcript_processor
+	$(PY_CMD)/pytest libs/transcript_processor
 	$(call success,Transcribe tests completed.)
 
 .PHONY: test-transcribe-docker
@@ -24,7 +24,7 @@ build-transcribe-image: ## Build the transcribe Docker image
 .PHONY: build-transcribe
 build-transcribe: transcribe-spec ## Build the transcribe CLI as a standalone binary
 	$(call info,Building transcribe CLI as a standalone binary...)
-	$(VENV_PATH)/pyinstaller transcribe.spec
+	$(PY_CMD)/pyinstaller transcribe.spec
 	$(call success,Transcribe CLI built successfully.)
 
 .PHONY: build-transcribe-docker
@@ -34,7 +34,7 @@ build-transcribe-docker: ## Runs build-transcribe within docker container
 .PHONY: transcribe-spec
 transcribe-spec: ## Create and build using a custom spec file
 	$(call info,Creating and modifying transcribe.spec file...)
-	$(VENV_PATH)/python3 ./cmd/transcribe/generate_spec.py
+	$(PY_CMD)/python3 ./cmd/transcribe/generate_spec.py
 	$(call success,transcribe.spec file created and modified successfully.)
 
 # TODO: move this to the mac recorder app because it requires specific signing

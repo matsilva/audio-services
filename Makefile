@@ -1,6 +1,9 @@
 # Makefile for managing project tasks
 
+# Set python
+PYTHONPATH := .
 VENV_PATH := venv/bin
+PY_CMD := PYTHONPATH=$(PYTHONPATH) $(VENV_PATH)
 
 
 # Define reusable logging functions
@@ -32,7 +35,7 @@ venv: ## Create a virtual environment for project dependencies
 .PHONY: install
 install: ## Install project dependencies using pipx
 	$(call info,Installing project dependencies using pipx...)
-	$(VENV_PATH)/pip install -r requirements.txt
+	$(PY_CMD)/pip install -r requirements.txt
 	$(call success,Project dependencies installed.)
 
 
@@ -54,20 +57,20 @@ cache-clean: build-clean ## Remove all __pycache__ and .pytest_cache folders
 .PHONY: test
 test: ## Run all tests with pytest
 	$(call info,Running tests with pytest...)
-	$(VENV_PATH)/pytest
+	$(PY_CMD)/pytest
 	$(call success,Tests completed.)
 
 
 .PHONY: test-coverage
 coverage: ## Run tests with coverage
 	$(call info,Running tests with coverage...)
-	$(VENV_PATH)/pytest --cov=audio-services
+	$(PY_CMD)/pytest --cov=audio-services
 	$(call success,Coverage tests completed.)
 
 .PHONY: lint
 lint: ## Check for linting errors with flake8
 	$(call info,Checking for linting errors with flake8...)
-	$(VENV_PATH)/flake8
+	$(PY_CMD)/flake8
 	$(call success,Linting check completed.)
 
 .PHONY: format
@@ -79,7 +82,7 @@ format: ## Format the code with black
 .PHONY: watch
 watch: ## Automatically re-run tests when files change with pytest-watch
 	$(call info,Starting pytest-watch...)
-	$(VENV_PATH)/ptw
+	$(PY_CMD)/ptw
 	$(call success,Pytest-watch running.)
 
 include cmd/transcribe/transcribe.mk

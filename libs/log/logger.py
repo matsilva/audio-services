@@ -1,20 +1,18 @@
 # logging_config.py
+import os
 import structlog
-import logging
-import sys
 
-# Basic Python logging configuration
-logging.basicConfig(
-    format="%(message)s",
-    stream=sys.stdout,
-    level=logging.INFO,
-)
+# Check if we're in development mode
+if os.getenv("ENV") == "production":
+    renderer = structlog.processors.JSONRenderer()
+else:
+    renderer = structlog.dev.ConsoleRenderer()
 
 # Structlog configuration
 structlog.configure(
     processors=[
         structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.JSONRenderer(),  # Output log in JSON format
+        renderer,  # Either ConsoleRenderer for development or JSONRenderer for production
     ],
     context_class=dict,
     logger_factory=structlog.stdlib.LoggerFactory(),

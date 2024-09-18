@@ -1,18 +1,22 @@
 import os
 import site
 from PyInstaller.utils.hooks import collect_submodules
+from libs.log.logger import logger
 
 
 def find_package_path(package_name):
     """Find the installation path of a Python package."""
     for site_dir in site.getsitepackages():
+        logger.info(f"Finding {package_name} in {site_dir}")
         package_path = os.path.join(site_dir, package_name)
         if os.path.exists(package_path):
+            logger.info(f"Found {package_name} in {package_path}")
             return package_path
 
     # Also check the user site-packages directory
     package_path = os.path.join(site.getusersitepackages(), package_name)
     if os.path.exists(package_path):
+        logger.info(f"Found {package_name} in {package_path}")
         return package_path
 
     raise FileNotFoundError(f"Package {package_name} not found in any site-packages directories.")
@@ -71,10 +75,10 @@ exe = EXE(
 """
 
     # Write spec file
+    logger.info("Writing specfile")
     with open("transcribe.spec", "w") as f:
         f.write(spec_content)
-
-    print("Spec file generated and customized successfully.")
+    logger.info("Spec file generated and customized successfully.")
 
 
 if __name__ == "__main__":
