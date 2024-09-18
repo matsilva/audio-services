@@ -1,6 +1,8 @@
 import json
 import os
 
+from libs.log import logger
+
 
 class TranscriptFile:
     def __init__(self, filePathWithName=str):
@@ -26,7 +28,7 @@ class TranscriptFile:
                 json.dump(segments_dict, json_file, ensure_ascii=False, indent=4)
             return segments_dict
         except Exception as e:
-            print(f"Failed to write segments to {self.filePath}: {e}")
+            logger.error(f"Failed to write segments to {self.filePath}: {e}")
             raise e
 
 

@@ -7,7 +7,7 @@ DOCKER_RUN = docker run --rm -v ./:/src $(DOCKER_IMAGE)
 .PHONY: test-transcribe
 test-transcribe: ## Run all transcribe-related tests with pytest
 	$(call info,Running transcribe tests with pytest...)
-	pytest libs/transcript_processor
+	$(PY_CMD)/pytest libs/transcript_processor
 	$(call success,Transcribe tests completed.)
 
 .PHONY: test-transcribe-docker
@@ -24,7 +24,7 @@ build-transcribe-image: ## Build the transcribe Docker image
 .PHONY: build-transcribe
 build-transcribe: transcribe-spec ## Build the transcribe CLI as a standalone binary
 	$(call info,Building transcribe CLI as a standalone binary...)
-	pyinstaller transcribe.spec
+	$(PY_CMD)/pyinstaller transcribe.spec
 	$(call success,Transcribe CLI built successfully.)
 
 .PHONY: build-transcribe-docker
@@ -33,13 +33,16 @@ build-transcribe-docker: ## Runs build-transcribe within docker container
 
 .PHONY: transcribe-spec
 transcribe-spec: ## Create and build using a custom spec file
-	$(call info,Creating transcribe.spec file...)
-	pyinstaller --osx-bundle-identifier dev.silvabyte.MacRecorder --onefile --name=transcribe --hidden-import=libs --specpath . cmd/transcribe/transcribe.py
-	$(call info,Modifying transcribe.spec file...)
-	@sed -i.bak 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/hiddenimports = \[\]/hiddenimports = \["libs"\]/' transcribe.spec
-	@sed -i.bak 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/datas=\[\]/datas=\[\("libs\/\*", "libs"\)\]/' transcribe.spec
-	@sed -i.bak 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec && rm transcribe.spec.bak || sed -i 's/pathex=\[\]/pathex=\["."\]/' transcribe.spec
-	$(call success,transcribe.spec file saved successfully.)
+	$(call info,Creating and modifying transcribe.spec file...)
+	$(PY_CMD)/python3 ./cmd/transcribe/generate_spec.py
+	$(call success,transcribe.spec file created and modified successfully.)
+
+# TODO: move this to the mac recorder app because it requires specific signing
+.PHONY: codesign-transcribe
+codesign-transcribe: ## Codesigns the transcribe binary
+	$(call info,codesigning transcribe binary...)
+	codesign --deep --force --sign "Mathew Silva (Personal Team)" ./dist/transcribe
+	$(call success,transcribe binary signed.)
 
 
 .PHONY: lint-transcribe-docker

@@ -1,5 +1,6 @@
 from libs.transcript_processor.transcript_file import TranscriptFile
 from libs.transcript_processor.whisper_processor import WhisperProcessor
+from libs.log.logger import logger
 
 
 def main():
@@ -23,9 +24,12 @@ def main():
     args = parser.parse_args()
 
     processor = WhisperProcessor(model_name="small")
+    logger.info(f"Transcribing audio file: {args.input}")
     _, segments = processor.process_audio(args.input)
+    logger.info("Transcription complete")
     writer = TranscriptFile(args.output)
     writer.write_segments_to_json(segments)
+    logger.info(f"Transcribed audio file: {args.output}")
 
 
 if __name__ == "__main__":
